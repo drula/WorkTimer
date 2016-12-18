@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>373</width>
-    <height>267</height>
+    <width>413</width>
+    <height>307</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,7 +48,11 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QTimeEdit" name="totalTimeEdit"/>
+        <widget class="QTimeEdit" name="totalTimeEdit">
+         <property name="displayFormat">
+          <string>H:mm:ss</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="workTimeLabel">
@@ -58,7 +62,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QTimeEdit" name="workTimeEdit"/>
+        <widget class="QTimeEdit" name="workTimeEdit">
+         <property name="displayFormat">
+          <string>H:mm:ss</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="2">
         <widget class="QLabel" name="restTimeLabel">
@@ -68,7 +76,11 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QTimeEdit" name="restTimeEdit"/>
+        <widget class="QTimeEdit" name="restTimeEdit">
+         <property name="displayFormat">
+          <string>H:mm:ss</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -79,21 +91,14 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="1">
-        <widget class="QPushButton" name="finishButton">
-         <property name="text">
-          <string>Finish</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="startButton">
+        <widget class="QPushButton" name="startFinishButton">
          <property name="text">
           <string>Start</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -115,32 +120,53 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QLabel" name="sessionTimelabel">
+       <item row="0" column="2">
+        <widget class="QLabel" name="nextSessionLabel">
          <property name="text">
-          <string>Current session time</string>
+          <string>Next work session time</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QTimeEdit" name="sessionTimeEdit"/>
+       <item row="1" column="2">
+        <widget class="QTimeEdit" name="nextSessionTimeEdit">
+         <property name="displayFormat">
+          <string>H:mm:ss</string>
+         </property>
+        </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="0">
         <widget class="QPushButton" name="workRestButton">
          <property name="text">
           <string>Work</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="nextSessionLabel">
-         <property name="text">
-          <string>Next session time</string>
+       <item row="1" column="0" colspan="2">
+        <widget class="QTimeEdit" name="sessionTimeEdit">
+         <property name="displayFormat">
+          <string>H:mm:ss</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QTimeEdit" name="nextSessionTimeEdit"/>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="sessionTimelabel">
+         <property name="text">
+          <string>Current work session time</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
