@@ -16,9 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connected = connect(&_timeLine, &QTimeLine::frameChanged, this, &MainWindow::onTimeLineFrameChanged);
     Q_ASSERT(connected);
 
-    connected = connect(&_timeLine, &QTimeLine::finished, this, &MainWindow::onTimeLineFinished);
-    Q_ASSERT(connected);
-
     setState(State::Initial);
 }
 
@@ -52,7 +49,8 @@ void MainWindow::setState(State state)
         _ui->workRestButton->setText("Rest");
         _ui->workRestButton->setEnabled(true);
 
-        _ui->nextSessionTimeEdit->setTime(QTime(0, 5));
+        _ui->nextSessionLabel->setText("Next rest session time");
+        _ui->nextSessionTimeEdit->setTime(defaultRestSessionTime);
 
         int msec = - _ui->sessionTimeEdit->time().msecsTo(QTime(0, 0));
         _timeLine.setDuration(msec);
@@ -73,17 +71,22 @@ void MainWindow::setState(State state)
 void MainWindow::setDefaultValues()
 {
     //! get values from settings
-    _ui->totalTimeEdit->setTime(QTime(8, 0));
-    _ui->workTimeEdit->setTime(QTime(6, 0));
-    _ui->restTimeEdit->setTime(QTime(2, 0));
+    _ui->totalTimeEdit->setTime(defaultTotalTime);
+    _ui->workTimeEdit->setTime(defaultWorkTime);
+    _ui->restTimeEdit->setTime(defaultRestTime);
 
-    _ui->nextSessionTimeEdit->setTime(QTime(0, 25, 0));
+    _ui->nextSessionTimeEdit->setTime(defaultWorkSessionTime);
 }
 
 void MainWindow::onStartFinishButton()
 {
     if (_state == State::Initial)
         setState(State::Work);
+}
+
+void MainWindow::onTimeLineFrameChanged(int frame)
+{
+    _ui->sessionTimeEdit->setTime(_ui->sessionTimeEdit->time().addSecs(-1));
 }
 
 MainWindow::~MainWindow()

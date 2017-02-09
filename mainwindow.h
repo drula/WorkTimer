@@ -3,11 +3,19 @@
 
 #include <QMainWindow>
 #include <QTimeLine>
+#include <QTime>
 
 namespace Ui
 {
     class MainWindow;
 }
+
+//! temporary values, should be taken from settings
+const QTime defaultTotalTime = QTime(8, 0);
+const QTime defaultWorkTime = QTime(6, 0);
+const QTime defaultRestTime = QTime(2, 0);
+const QTime defaultWorkSessionTime = QTime(0, 25);
+const QTime defaultRestSessionTime = QTime(0, 5);
 
 class MainWindow : public QMainWindow
 {
@@ -34,7 +42,6 @@ private:
 private slots:
     void onStartFinishButton();
     void onTimeLineFrameChanged(int frame);
-    void onTimeLineFinished();
 };
 
 #endif // MAINWINDOW_H
