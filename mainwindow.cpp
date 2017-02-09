@@ -6,8 +6,18 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui(new Ui::MainWindow)
 {
     _ui->setupUi(this);
+    _timeLine.setCurveShape(QTimeLine::LinearCurve);
 
-    Q_ASSERT(connect(_ui->startFinishButton, &QPushButton::clicked, this, &MainWindow::onStartButton));
+    bool connected = false;
+
+    connected = connect(_ui->startFinishButton, &QPushButton::clicked, this, &MainWindow::onStartFinishButton);
+    Q_ASSERT(connected);
+
+    connected = connect(&_timeLine, &QTimeLine::frameChanged, this, &MainWindow::onTimeLineFrameChanged);
+    Q_ASSERT(connected);
+
+    connected = connect(&_timeLine, &QTimeLine::finished, this, &MainWindow::onTimeLineFinished);
+    Q_ASSERT(connected);
 
     setState(State::Initial);
 }
@@ -32,6 +42,27 @@ void MainWindow::setState(State state)
 
         break;
 
+    case State::Work: {
+        _ui->startFinishButton->setText("Finish");
+
+        _ui->sessionTimeEdit->setTime(_ui->nextSessionTimeEdit->time());
+        _ui->sessionTimeEdit->setEnabled(true);
+        _ui->sessionTimeEdit->setReadOnly(true);
+
+        _ui->workRestButton->setText("Rest");
+        _ui->workRestButton->setEnabled(true);
+
+        _ui->nextSessionTimeEdit->setTime(QTime(0, 5));
+
+        int msec = - _ui->sessionTimeEdit->time().msecsTo(QTime(0, 0));
+        _timeLine.setDuration(msec);
+        _timeLine.setFrameRange(0, msec / 1000);
+        _timeLine.setUpdateInterval(1000);
+        _timeLine.start();
+    }
+
+        break;
+
     default:
         break; //! message or exception in debug
     }
@@ -49,10 +80,10 @@ void MainWindow::setDefaultValues()
     _ui->nextSessionTimeEdit->setTime(QTime(0, 25, 0));
 }
 
-void MainWindow::onStartButton()
+void MainWindow::onStartFinishButton()
 {
     if (_state == State::Initial)
-        setState(State::Started);
+        setState(State::Work);
 }
 
 MainWindow::~MainWindow()

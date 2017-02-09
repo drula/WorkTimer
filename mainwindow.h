@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimeLine>
 
 namespace Ui
 {
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
     enum class State
     {
         Initial,
-        Started,
+        Work,
     };
 
 public:
@@ -25,12 +26,15 @@ public:
 private:
     Ui::MainWindow *_ui;
     State _state;
+    QTimeLine _timeLine;
 
     void setState(State state);
     void setDefaultValues();
 
 private slots:
-    void onStartButton();
+    void onStartFinishButton();
+    void onTimeLineFrameChanged(int frame);
+    void onTimeLineFinished();
 };
 
 #endif // MAINWINDOW_H
