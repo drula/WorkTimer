@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow
     {
         Initial,
         Work,
+        Rest,
     };
 
 public:
@@ -42,6 +43,7 @@ private:
 private slots:
     void onStartFinishButton();
     void onTimeLineFrameChanged(int frame);
+    void onTimeLineFinished();
 };
 
 #endif // MAINWINDOW_H

@@ -142,7 +142,7 @@
         </widget>
        </item>
        <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="sessionTimelabel">
+        <widget class="QLabel" name="sessionTimeLabel">
          <property name="text">
           <string>Current work session time</string>
          </property>
