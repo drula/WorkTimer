@@ -86,12 +86,44 @@
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QPushButton" name="startFinishButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Start</string>
          </property>
         </widget>
        </item>
+       <item row="0" column="2">
+        <widget class="QRadioButton" name="restRadioButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Rest</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="1">
+        <widget class="QRadioButton" name="workRadioButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Work</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -135,14 +167,14 @@
         </widget>
        </item>
        <item row="1" column="0" colspan="2">
-        <widget class="QTimeEdit" name="sessionTimeEdit">
+        <widget class="QTimeEdit" name="currentSessionTimeEdit">
          <property name="displayFormat">
           <string>H:mm:ss</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="sessionTimeLabel">
+        <widget class="QLabel" name="currentSessionTimeLabel">
          <property name="text">
           <string>Current work session time</string>
          </property>

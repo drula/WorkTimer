@@ -11,18 +11,27 @@ namespace Ui
 }
 
 //! temporary values, should be taken from settings
-const QTime defaultTotalTime = QTime(8, 0);
-const QTime defaultWorkTime = QTime(6, 0);
-const QTime defaultRestTime = QTime(2, 0);
-const QTime defaultWorkSessionTime = QTime(0, 25);
-const QTime defaultRestSessionTime = QTime(0, 5);
+const QTime DefaultTotalTime(8, 0);
+const QTime DefaultWorkTime(6, 0);
+const QTime DefaultRestTime(2, 0);
+const QTime DefaultWorkSessionTime(0, 25);
+const QTime DefaultRestSessionTime(0, 5);
+
+//! temporary values, should be taken from translation files
+const QString Start("Start");
+const QString Finish("Finish");
+const QString Work("Work");
+const QString Rest("Rest");
+const QString CurrentWorkSessionTime("Current work session time");
+const QString CurrentRestSessionTime("Current rest session time");
+const QString NextWorkSessionTime("Next work session time");
+const QString NextRestSessionTime("Next rest sesstion time");
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    enum class State
-    {
+    enum class State {
         Initial,
         Work,
         Rest,
@@ -40,9 +49,19 @@ private:
     void setState(State state);
     void setDefaultValues();
 
+// state transition functions
+    void InitialToWork();
+    void InitialToRest();
+    void WorkToInitial();
+    void WorkToRest();
+    void RestToInitial();
+    void RestToWork();
+
 private slots:
     void onStartFinishButton();
-    void onTimeLineFrameChanged(int frame);
+    void onWorkRadioButton();
+    void onRestRadioButton();
+    void onTimeLineFrameChanged();
     void onTimeLineFinished();
 };
 
