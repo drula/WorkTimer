@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -99,7 +100,7 @@ void MainWindow::InitialToWork()
     _ui->workRestButton->setText(Rest);
     _ui->workRestButton->setEnabled(true);
 
-    int msec = - _ui->currentSessionTimeEdit->time().msecsTo(QTime(0, 0));
+    int msec = - _ui->workTimeEdit->time().msecsTo(QTime(0, 0));
     _timeLine.setDuration(msec);
     _timeLine.setFrameRange(0, msec / 1000);
     _timeLine.setUpdateInterval(1000);
@@ -121,7 +122,7 @@ void MainWindow::InitialToRest()
     _ui->workRestButton->setText(Work);
     _ui->workRestButton->setEnabled(true);
 
-    int msec = - _ui->currentSessionTimeEdit->time().msecsTo(QTime(0, 0));
+    int msec = - _ui->workTimeEdit->time().msecsTo(QTime(0, 0));
     _timeLine.setDuration(msec);
     _timeLine.setFrameRange(0, msec / 1000);
     _timeLine.setUpdateInterval(1000);
@@ -195,15 +196,26 @@ void MainWindow::onRestRadioButton()
 
 void MainWindow::onTimeLineFrameChanged()
 {
-    _ui->currentSessionTimeEdit->setTime(_ui->currentSessionTimeEdit->time().addSecs(-1));
+    static QTime currentTime = _ui->currentSessionTimeEdit->time();
+
+    static int secsToAdd = -1;
+    if (currentTime == QTime(0, 0)) {
+        secsToAdd = 1;
+        QPalette palette(_ui->currentSessionTimeEdit->palette());
+        palette.setColor(QPalette::Text, Qt::red);
+        _ui->currentSessionTimeEdit->setPalette(palette);
+    }
+
+    currentTime = currentTime.addSecs(secsToAdd);
+    _ui->currentSessionTimeEdit->setTime(currentTime);
 }
 
 void MainWindow::onTimeLineFinished()
 {
     if (_state == State::Work)
-        setState(State::Rest);
+        WorkToInitial();
     else if (_state == State::Rest)
-        setState(State::Work); //! transition from Work state
+        RestToInitial();
 }
 
 MainWindow::~MainWindow()
