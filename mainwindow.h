@@ -11,11 +11,11 @@ namespace Ui
 }
 
 //! temporary values, should be taken from settings
-const QTime DefaultTotalTime(8, 0);
-const QTime DefaultWorkTime(6, 0);
-const QTime DefaultRestTime(2, 0);
-const QTime DefaultWorkSessionTime(0, 25);
-const QTime DefaultRestSessionTime(0, 5);
+const QTime DefaultTotalTime(0, 5); //! (8, 0);
+const QTime DefaultWorkTime(0, 3); //! (6, 0);
+const QTime DefaultRestTime(0, 2); //! (2, 0);
+const QTime DefaultWorkSessionTime(0, 0, 30); //! (0, 25);
+const QTime DefaultRestSessionTime(0, 0, 5); //! (0, 5);
 
 //! temporary values, should be taken from translation files
 const QString Start("Start");
@@ -25,7 +25,7 @@ const QString Rest("Rest");
 const QString CurrentWorkSessionTime("Current work session time");
 const QString CurrentRestSessionTime("Current rest session time");
 const QString NextWorkSessionTime("Next work session time");
-const QString NextRestSessionTime("Next rest sesstion time");
+const QString NextRestSessionTime("Next rest session time");
 
 class MainWindow : public QMainWindow
 {
@@ -46,10 +46,8 @@ private:
     State _state;
     QTimeLine _timeLine;
 
-    void setState(State state);
-    void setDefaultValues();
-
 // state transition functions
+    void toInitial();
     void InitialToWork();
     void InitialToRest();
     void WorkToInitial();

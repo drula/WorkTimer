@@ -26,65 +26,38 @@ MainWindow::MainWindow(QWidget *parent) :
     connected = connect(_ui->restRadioButton, &QRadioButton::clicked, this, &MainWindow::onRestRadioButton);
     Q_ASSERT(connected);
 
-    setState(State::Initial);
+    toInitial();
 }
 
-void MainWindow::setState(State state)
+void MainWindow::toInitial()
 {
-    switch (state) {
-    case State::Initial:
-        _ui->totalTimeEdit->setEnabled(true);
-        _ui->workTimeEdit->setEnabled(true);
-        _ui->restTimeEdit->setEnabled(true);
-
-        _ui->startFinishButton->setEnabled(true);
-        _ui->startFinishButton->setText(Start);
-
-        _ui->currentSessionTimeEdit->setEnabled(false);
-        _ui->workRestButton->setEnabled(false);
-        _ui->workRestButton->setText(Work);
-        _ui->nextSessionTimeEdit->setEnabled(true);
-
-        setDefaultValues();
-
-        break;
-
-    case State::Work:
-
-        break;
-
-    case State::Rest: {
-        _ui->currentSessionTimeLabel->setText(CurrentRestSessionTime);
-        _ui->currentSessionTimeEdit->setTime(DefaultRestSessionTime);
-
-        _ui->nextSessionLabel->setText(NextWorkSessionTime);
-        _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
-
-        int msec = - _ui->currentSessionTimeEdit->time().msecsTo(QTime(0, 0));
-        _timeLine.setDuration(msec);
-        _timeLine.setFrameRange(0, msec / 1000);
-        _timeLine.setUpdateInterval(1000);
-        _timeLine.start();
-    }
-
-        break;
-
-    default:
-        break; //! message or exception in debug
-    }
-
-    _state = state;
-}
-
-void MainWindow::setDefaultValues()
-{
-    //! get values from settings
+    _ui->totalTimeEdit->setEnabled(true);
     _ui->totalTimeEdit->setTime(DefaultTotalTime);
+
+    _ui->workTimeEdit->setEnabled(true);
     _ui->workTimeEdit->setTime(DefaultWorkTime);
+
+    _ui->restTimeEdit->setEnabled(true);
     _ui->restTimeEdit->setTime(DefaultRestTime);
 
-    _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
+    _ui->startFinishButton->setText(Start);
+    _ui->startFinishButton->setEnabled(true);
+
+    _ui->workRadioButton->setEnabled(true);
+    _ui->restRadioButton->setEnabled(true);
     _ui->workRadioButton->setChecked(true);
+    onWorkRadioButton();
+
+    _ui->currentSessionTimeLabel->clear();
+    _ui->currentSessionTimeEdit->setEnabled(false);
+    _ui->currentSessionTimeEdit->clear();
+
+    _ui->nextSessionTimeEdit->setEnabled(true);
+
+    _ui->workRestButton->setEnabled(false);
+    _ui->workRestButton->setText(Work);
+
+    _state = State::Initial;
 }
 
 void MainWindow::InitialToWork()
@@ -93,17 +66,20 @@ void MainWindow::InitialToWork()
     _ui->workRadioButton->setEnabled(false);
     _ui->restRadioButton->setEnabled(false);
 
-    _ui->currentSessionTimeEdit->setTime(DefaultWorkSessionTime);
+    _ui->currentSessionTimeLabel->setText(CurrentWorkSessionTime);
+    _ui->currentSessionTimeEdit->setTime(_ui->nextSessionTimeEdit->time());
     _ui->currentSessionTimeEdit->setEnabled(true);
     _ui->currentSessionTimeEdit->setReadOnly(true);
+
+    _ui->nextSessionLabel->setText(NextRestSessionTime);
+    _ui->nextSessionTimeEdit->setTime(DefaultRestSessionTime);
 
     _ui->workRestButton->setText(Rest);
     _ui->workRestButton->setEnabled(true);
 
-    int msec = - _ui->workTimeEdit->time().msecsTo(QTime(0, 0));
-    _timeLine.setDuration(msec);
-    _timeLine.setFrameRange(0, msec / 1000);
-    _timeLine.setUpdateInterval(1000);
+    int secs = - _ui->workTimeEdit->time().secsTo(QTime(0, 0));
+    _timeLine.setDuration(secs * 1000);
+    _timeLine.setFrameRange(0, secs);
     _timeLine.start();
 
     _state = State::Work;
@@ -115,17 +91,20 @@ void MainWindow::InitialToRest()
     _ui->workRadioButton->setEnabled(false);
     _ui->restRadioButton->setEnabled(false);
 
-    _ui->currentSessionTimeEdit->setTime(DefaultRestSessionTime);
+    _ui->currentSessionTimeLabel->setText(CurrentRestSessionTime);
+    _ui->currentSessionTimeEdit->setTime(_ui->nextSessionTimeEdit->time());
     _ui->currentSessionTimeEdit->setEnabled(true);
     _ui->currentSessionTimeEdit->setReadOnly(true);
+
+    _ui->nextSessionLabel->setText(NextWorkSessionTime);
+    _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
 
     _ui->workRestButton->setText(Work);
     _ui->workRestButton->setEnabled(true);
 
-    int msec = - _ui->workTimeEdit->time().msecsTo(QTime(0, 0));
-    _timeLine.setDuration(msec);
-    _timeLine.setFrameRange(0, msec / 1000);
-    _timeLine.setUpdateInterval(1000);
+    int secs = - _ui->workTimeEdit->time().secsTo(QTime(0, 0));
+    _timeLine.setDuration(secs * 1000);
+    _timeLine.setFrameRange(0, secs);
     _timeLine.start();
 
     _state = State::Rest;
@@ -178,36 +157,40 @@ void MainWindow::onStartFinishButton()
 
 void MainWindow::onWorkRadioButton()
 {
-    _ui->currentSessionTimeLabel->setText(CurrentWorkSessionTime);
-    _ui->currentSessionTimeEdit->setTime(DefaultWorkSessionTime);
-
-    _ui->nextSessionLabel->setText(NextRestSessionTime);
-    _ui->nextSessionTimeEdit->setTime(DefaultRestSessionTime);
+    _ui->nextSessionLabel->setText(NextWorkSessionTime);
+    _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
 }
 
 void MainWindow::onRestRadioButton()
 {
-    _ui->currentSessionTimeLabel->setText(CurrentRestSessionTime);
-    _ui->currentSessionTimeEdit->setTime(DefaultRestSessionTime);
-
-    _ui->nextSessionLabel->setText(NextWorkSessionTime);
-    _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
+    _ui->nextSessionLabel->setText(NextRestSessionTime);
+    _ui->nextSessionTimeEdit->setTime(DefaultRestSessionTime);
 }
 
 void MainWindow::onTimeLineFrameChanged()
 {
     static QTime currentTime = _ui->currentSessionTimeEdit->time();
 
-    static int secsToAdd = -1;
+    static QTimeEdit *wholeTimeEdit = _state == State::Work
+           ? _ui->workTimeEdit
+           : _ui->restTimeEdit;
+
+    static QTime wholeTime = wholeTimeEdit->time();
+
+    static int secsToAddToCurrentTime = -1;
     if (currentTime == QTime(0, 0)) {
-        secsToAdd = 1;
+        secsToAddToCurrentTime = 1;
         QPalette palette(_ui->currentSessionTimeEdit->palette());
         palette.setColor(QPalette::Text, Qt::red);
         _ui->currentSessionTimeEdit->setPalette(palette);
     }
 
-    currentTime = currentTime.addSecs(secsToAdd);
+    static int secsToAddToWholeTime = -1;
+
+    currentTime = currentTime.addSecs(secsToAddToCurrentTime);
+    wholeTime = wholeTime.addSecs(secsToAddToWholeTime);
     _ui->currentSessionTimeEdit->setTime(currentTime);
+    wholeTimeEdit->setTime(wholeTime);
 }
 
 void MainWindow::onTimeLineFinished()
