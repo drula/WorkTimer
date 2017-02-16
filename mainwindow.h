@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimeLine>
 #include <QTime>
+#include <QPalette>
 
 namespace Ui
 {
@@ -46,6 +47,12 @@ private:
     State _state;
     QTimeLine _timeLine;
 
+    QPalette _timePalette; // black time text
+    QPalette _timeUpPalette; // red time text
+    bool _isTimeUp;
+    int _secsToAdd;
+    void setTimeUp(bool isTimeUp);
+
 // state transition functions
     void toInitial();
     void InitialToWork();
@@ -57,6 +64,7 @@ private:
 
 private slots:
     void onStartFinishButton();
+    void onWorkRestButton();
     void onWorkRadioButton();
     void onRestRadioButton();
     void onTimeLineFrameChanged();
