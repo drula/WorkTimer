@@ -49,9 +49,15 @@ private:
 
     QPalette _timePalette; // black time text
     QPalette _timeUpPalette; // red time text
-    bool _isTimeUp;
-    int _secsToAdd;
-    void setTimeUp(bool isTimeUp);
+
+    int _secsToAddToCurrentTime;
+    void setCurrentTimeUp(bool isTimeUp);
+
+    int _secsToAddToWorkTime;
+    void setWorkTimeUp(bool isTimeUp);
+
+    int _secsToAddToRestTime;
+    void setRestTimeUp(bool isTimeUp);
 
 // state transition functions
     void toInitial();

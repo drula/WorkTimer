@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _timeUpPalette = _timePalette;
     _timeUpPalette.setColor(QPalette::Text, Qt::red);
 
-    setTimeUp(false);
-
     bool connected = false;
 
     connected = connect(_ui->startFinishButton, &QPushButton::clicked, this, &MainWindow::onStartFinishButton);
@@ -64,6 +62,10 @@ void MainWindow::toInitial()
 
     _ui->workRestButton->setEnabled(false);
     _ui->workRestButton->setText(Work);
+
+    setCurrentTimeUp(false);
+    setWorkTimeUp(false);
+    setRestTimeUp(false);
 
     _state = State::Initial;
 }
@@ -120,9 +122,15 @@ void MainWindow::InitialToRest()
 
 void MainWindow::WorkToInitial()
 {
+    _timeLine.stop();
+
     _ui->startFinishButton->setText(Start);
     _ui->workRadioButton->setEnabled(true);
     _ui->restRadioButton->setEnabled(true);
+
+    setCurrentTimeUp(false);
+    setWorkTimeUp(false);
+    setRestTimeUp(false);
 
     _state = State::Initial;
 }
@@ -132,7 +140,7 @@ void MainWindow::WorkToRest()
     _ui->currentSessionTimeLabel->setText(CurrentRestSessionTime);
     _ui->currentSessionTimeEdit->setTime(_ui->nextSessionTimeEdit->time());
 
-    setTimeUp(false);
+    setCurrentTimeUp(false);
 
     _ui->nextSessionLabel->setText(NextWorkSessionTime);
     _ui->nextSessionTimeEdit->setTime(DefaultWorkSessionTime);
@@ -144,9 +152,15 @@ void MainWindow::WorkToRest()
 
 void MainWindow::RestToInitial()
 {
+    _timeLine.stop();
+
     _ui->startFinishButton->setText(Start);
     _ui->workRadioButton->setEnabled(true);
     _ui->restRadioButton->setEnabled(true);
+
+    setCurrentTimeUp(false);
+    setWorkTimeUp(false);
+    setRestTimeUp(false);
 
     _state = State::Initial;
 }
@@ -156,7 +170,7 @@ void MainWindow::RestToWork()
     _ui->currentSessionTimeLabel->setText(CurrentWorkSessionTime);
     _ui->currentSessionTimeEdit->setTime(_ui->nextSessionTimeEdit->time());
 
-    setTimeUp(false);
+    setCurrentTimeUp(false);
 
     _ui->nextSessionLabel->setText(NextRestSessionTime);
     _ui->nextSessionTimeEdit->setTime(DefaultRestSessionTime);
@@ -212,9 +226,36 @@ void MainWindow::onTimeLineFrameChanged()
 {
     QTime currentSessionTime = _ui->currentSessionTimeEdit->time();
     if (currentSessionTime == QTime(0, 0))
-        setTimeUp(true);
+        setCurrentTimeUp(true);
 
-    _ui->currentSessionTimeEdit->setTime(_ui->currentSessionTimeEdit->time().addSecs(_secsToAdd));
+    _ui->currentSessionTimeEdit->setTime(currentSessionTime.addSecs(_secsToAddToCurrentTime));
+
+    switch (_state) {
+    case State::Work: {
+        QTime workTime = _ui->workTimeEdit->time();
+        if (workTime == QTime(0, 0))
+            setWorkTimeUp(true);
+
+        _ui->workTimeEdit->setTime(workTime.addSecs(_secsToAddToWorkTime));
+    }
+
+        break;
+
+    case State::Rest: {
+        QTime restTime = _ui->restTimeEdit->time();
+        if (restTime == QTime(0, 0))
+            setRestTimeUp(true);
+
+        _ui->restTimeEdit->setTime(restTime.addSecs(_secsToAddToRestTime));
+
+    }
+        break;
+
+    default:
+        break;
+    }
+
+    _ui->totalTimeEdit->setTime(_ui->totalTimeEdit->time().addSecs(-1));
 }
 
 void MainWindow::onTimeLineFinished()
@@ -231,9 +272,20 @@ MainWindow::~MainWindow()
     delete _ui;
 }
 
-void MainWindow::setTimeUp(bool isTimeUp)
+void MainWindow::setCurrentTimeUp(bool isTimeUp)
 {
     _ui->currentSessionTimeEdit->setPalette(isTimeUp ? _timeUpPalette : _timePalette);
-    _secsToAdd = isTimeUp ? 1 : -1;
-    _isTimeUp = isTimeUp;
+    _secsToAddToCurrentTime = isTimeUp ? 1 : -1;
+}
+
+void MainWindow::setWorkTimeUp(bool isTimeUp)
+{
+    _ui->workTimeEdit->setPalette(isTimeUp ? _timeUpPalette : _timePalette);
+    _secsToAddToWorkTime = isTimeUp ? 1 : -1;
+}
+
+void MainWindow::setRestTimeUp(bool isTimeUp)
+{
+    _ui->restTimeEdit->setPalette(isTimeUp ? _timeUpPalette : _timePalette);
+    _secsToAddToRestTime = isTimeUp ? 1 : -1;
 }
