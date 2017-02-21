@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,4 +19,12 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
+# sounds.files = sounds/shipsbell.wav
+# sounds.path = $$OUT_PWD
+# message("out_pwd = $$OUT_PWD")
+# INSTALLS += sounds
+
 CONFIG   += warn_on
+
+RESOURCES += \
+    resources.qrc

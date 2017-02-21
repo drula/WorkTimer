@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QSound>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -225,8 +226,10 @@ void MainWindow::onRestRadioButton()
 void MainWindow::onTimeLineFrameChanged()
 {
     QTime currentSessionTime = _ui->currentSessionTimeEdit->time();
-    if (currentSessionTime == QTime(0, 0))
+    if (currentSessionTime == QTime(0, 0)) {
         setCurrentTimeUp(true);
+        QSound::play(":/sounds/sounds/shipsbell.wav");
+    }
 
     _ui->currentSessionTimeEdit->setTime(currentSessionTime.addSecs(_secsToAddToCurrentTime));
 
