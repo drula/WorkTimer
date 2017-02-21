@@ -227,8 +227,8 @@ void MainWindow::onTimeLineFrameChanged()
 {
     QTime currentSessionTime = _ui->currentSessionTimeEdit->time();
     if (currentSessionTime == QTime(0, 0)) {
+        QSound::play(":/data/sounds/shipsbell.wav");
         setCurrentTimeUp(true);
-        QSound::play(":/sounds/sounds/shipsbell.wav");
     }
 
     _ui->currentSessionTimeEdit->setTime(currentSessionTime.addSecs(_secsToAddToCurrentTime));

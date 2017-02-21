@@ -1,5 +1,6 @@
 <RCC>
-    <qresource prefix="/sounds">
+    <qresource prefix="/data">
         <file>sounds/shipsbell.wav</file>
+        <file>images/sitting-rabbit.png</file>
     </qresource>
 </RCC>
