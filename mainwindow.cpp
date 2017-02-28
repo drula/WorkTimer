@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     _ui(new Ui::MainWindow)
 {
+    setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+
     _ui->setupUi(this);
     _timeLine.setCurveShape(QTimeLine::LinearCurve);
 
@@ -227,7 +229,7 @@ void MainWindow::onTimeLineFrameChanged()
 {
     QTime currentSessionTime = _ui->currentSessionTimeEdit->time();
     if (currentSessionTime == QTime(0, 0)) {
-        QSound::play(":/data/sounds/shipsbell.wav");
+        QSound::play(SoundRc);
         setCurrentTimeUp(true);
     }
 

@@ -2,5 +2,6 @@
     <qresource prefix="/data">
         <file>sounds/shipsbell.wav</file>
         <file>images/sitting-rabbit.png</file>
+        <file>translations/mainwindow_by.qm</file>
     </qresource>
 </RCC>

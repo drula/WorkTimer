@@ -11,22 +11,19 @@ namespace Ui
     class MainWindow;
 }
 
+// resources
+const QString IconRc(":/data/images/sitting-rabbit.png");
+const QString SoundRc(":/data/sounds/shipsbell.wav");
+const QString TranslationRc(":/data/translations/mainwindow_by.qm");
+
 //! temporary values, should be taken from settings
+//! class values?
 const QTime DefaultTotalTime(0, 5); //! (8, 0);
 const QTime DefaultWorkTime(0, 3); //! (6, 0);
 const QTime DefaultRestTime(0, 2); //! (2, 0);
 const QTime DefaultWorkSessionTime(0, 0, 30); //! (0, 25);
 const QTime DefaultRestSessionTime(0, 0, 5); //! (0, 5);
 
-//! temporary values, should be taken from translation files
-const QString Start("Start");
-const QString Finish("Finish");
-const QString Work("Work");
-const QString Rest("Rest");
-const QString CurrentWorkSessionTime("Current work session time");
-const QString CurrentRestSessionTime("Current rest session time");
-const QString NextWorkSessionTime("Next work session time");
-const QString NextRestSessionTime("Next rest session time");
 
 class MainWindow : public QMainWindow
 {
@@ -37,6 +34,16 @@ class MainWindow : public QMainWindow
         Work,
         Rest,
     };
+
+    //! static?
+    const QString Start = tr("Start");
+    const QString Finish = tr("Finish");
+    const QString Work = tr("Work");
+    const QString Rest = tr("Rest");
+    const QString CurrentWorkSessionTime = tr("Current work session time");
+    const QString CurrentRestSessionTime = tr("Current rest session time");
+    const QString NextWorkSessionTime = tr("Next work session time");
+    const QString NextRestSessionTime = tr("Next rest session time");
 
 public:
     explicit MainWindow(QWidget *parent = 0);

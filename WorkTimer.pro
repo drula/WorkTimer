@@ -19,12 +19,9 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-# sounds.files = sounds/shipsbell.wav
-# sounds.path = $$OUT_PWD
-# message("out_pwd = $$OUT_PWD")
-# INSTALLS += sounds
-
 CONFIG   += warn_on
 
 RESOURCES += \
     resources.qrc
+
+TRANSLATIONS += translations/mainwindow_by.ts
